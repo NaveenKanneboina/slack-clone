@@ -33,6 +33,7 @@
     border-top: 1px solid #49274b;
     max-width: 250px;
     color: white;
+    flex: 0.3;
 }
 .sidebar_header > .MuiSvgIcon-root{
     padding: 10px;
@@ -40,6 +41,7 @@
     background-color: white;
     color: #49274b;
     border-radius: 999px;
+    margin-left: 20px;
 }
 
 .sidebar > hr {
