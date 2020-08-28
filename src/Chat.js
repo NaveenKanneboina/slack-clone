@@ -4,10 +4,12 @@ import { useParams } from "react-router-dom";
 import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import db from "./firebase";
+import Messages from "./Messages"
 
 function Chat() {
     const { roomId } = useParams();
     const [channelDetails, setchannelDetails] = useState(null);
+    const [messageDetails, setmessageDetails] = useState([]);
 
     useEffect(() => {
         if(roomId){
@@ -15,7 +17,17 @@ function Chat() {
             .doc(roomId)
             .onSnapshot((snapshot)=> setchannelDetails(snapshot.data()))
         }
-    }, [roomId])
+
+        db.collection('rooms')
+            .doc(roomId)
+            .collection('messages')
+            .orderBy('timestamp', 'asc')
+            .onSnapshot((snapshot) => 
+                setmessageDetails(snapshot.docs.map(doc => doc.data()))
+            );
+    }, [roomId]);
+
+    console.log(messageDetails)
 
     return (
         <div className="chat">
@@ -31,6 +43,18 @@ function Chat() {
                         <InfoOutlinedIcon/> Details
                     </p>
                 </div>
+            </div>
+            <div className="chat_message">
+                {
+                    messageDetails.map(message =>(
+                        <Messages
+                        message= {message.message}
+                        timestamp={message.timestamp}
+                        user={message.user}
+                        userImage={message.userimage} />
+                    ))
+                
+                }
             </div>
         </div>
     )
